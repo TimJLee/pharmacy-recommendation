@@ -4,7 +4,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.containers.GenericContainer;
 import spock.lang.Specification;
 
-// 통합 테스트를 위한 추상 클래스
+/**
+ * 통합 테스트를 위한 추상 클래스. 싱글톤 컨테이너
+ * docker ps 해보면 테스트 도중 redis, mariadb, testcontainers/ryuk 요 3개 컨테이너가 올라옴.
+ * 테스트가 다 끝난 후 testcontainers/ryuk 가 redis, mariadb 컨테이너를 다 정리해줌
+ */
 @SpringBootTest
 abstract class AbstractIntegrationContainerBaseTest extends Specification {
 
