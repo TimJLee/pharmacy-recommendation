@@ -32,7 +32,7 @@ public class PharmacyRepositoryService {
         Pharmacy pharmacy = pharmacyRepository.findById(id).orElse(null);
 
         if (Objects.isNull(pharmacy)) {
-            log.error("[PharmacyRepositoryService updateAddress] not found error. id: {}", id);
+            log.error("[PharmacyRepositoryService updateAddressWithoutTransaction] not found error. id: {}", id);
             return;
         }
 
