@@ -58,4 +58,53 @@ class PharmacyRepositoryServiceTest extends AbstractIntegrationContainerBaseTest
         then:
         result.get(0).pharmacyAddress == originalAddress
     }
+
+    def "self invocation"() {
+        given:
+        String address = "서울 강동구 암사동"
+        String name = "강동약국"
+        double latitude = 36.11
+        double longitude = 128.11
+
+        def pharmacy = Pharmacy.builder()
+                .pharmacyAddress(address)
+                .pharmacyName(name)
+                .latitude(latitude)
+                .longitude(longitude)
+                .build()
+
+        when:
+        pharmacyRepositoryService.bar(Arrays.asList(pharmacy))
+
+        then:
+        // spock 에서 에러 처리
+        def e = thrown(RuntimeException.class)
+        e.message == "error"
+        def result = pharmacyRepository.findAll()
+        result.size() == 1 // 트랜잭션이 적용되지 않는다( 롤백 적용 안됨 )
+    }
+
+    def "transactional readOnly test"() {
+        given:
+        String address = "서울 강동구 암사동"
+        String modifiedAddress = "서울 강남구 역삼동"
+        String name = "강동약국"
+        double latitude = 36.11
+        double longitude = 128.11
+
+        def input = Pharmacy.builder()
+                .pharmacyAddress(address)
+                .pharmacyName(name)
+                .latitude(latitude)
+                .longitude(longitude)
+                .build()
+
+        when:
+        def pharmacy = pharmacyRepository.save(input)
+        pharmacyRepositoryService.readOnlyTest(pharmacy.id)
+
+        then:
+        def result = pharmacyRepository.findAll()
+        result.get(0).pharmacyAddress == address
+    }
 }
