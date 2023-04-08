@@ -19,13 +19,15 @@ public class PharmacyRepositoryService {
 
     private final PharmacyRepository pharmacyRepository;
 
-    // self invocation test
-    // 원인
-    // 같은 클래스 내에서 같은 클래스의 @Transactional이 붙은 메서드를 호출하면 발생
-    // proxy 객체를 사용하기 때문에 같은 클래스 내에서 호출하면 proxy 객체를 사용하지 않고 호출된다.
-    // 해결방법들
-    // 1. 상위 메서드에 @Transactional을 붙인다.
-    // 2. 의존성 분리를 한다. -> foo 함수를 별도의 서비스 클래스의 함수로 분리한다.
+    /* self invocation test
+     원인
+     같은 클래스 내에서 상위 메서드에 @Transactional 을 붙이지 않고, 같은 클래스의 @Transactional이 붙은 메서드를 호출하면 발생
+     같은 클래스 내의 메서드를 호출하면 proxy 객체를 사용하지 않고 호출하기 때문에 발생
+     pr 에 정리완료
+     해결방법들
+     1. 상위 메서드에 @Transactional을 붙인다.
+     2. 의존성 분리를 한다. -> foo 함수를 별도의 서비스 클래스의 함수로 분리한다.
+     */
     // @Transactional
     public void bar(List<Pharmacy> pharmacies) {
         log.info("bar CurrentTransactionName: "+ TransactionSynchronizationManager.getCurrentTransactionName());
