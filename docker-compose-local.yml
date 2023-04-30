@@ -20,6 +20,7 @@ services:
     volumes:
       #      호스트 머신의 ./database/config 디렉토리에 있는 파일들을 roadmap-database 컨테이너 내부의 /etc/mysql/conf.d 경로에 마운트하여 사용자 정의 구성 파일을 사용할 수 있도록 함
       - ./database/config:/etc/mysql/conf.d
+      - ./database/init:/docker-entrypoint-initdb.d
     ports:
       #      - ports: - "<host_port>:<container_port>". 컨테이너의 포트 3306을 호스트 머신의 포트 3307에 매핑하는 데 사용. 현재 다른 db와 redis 를 3306, 6379로 사용중이라서 이렇게 설정
       - "3307:3306"
